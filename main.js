@@ -18,7 +18,10 @@ var vm = new Vue({
             fabCanvas.loadFromJSON(data);
             console.log("sup");
             fabCanvas.forEachObject(function(object){ 
-                object.selectable = false; 
+                object.lockMovementX = true;
+                object.lockMovementY = true;
+                object.lockRotation = true;
+                object.selectable = true; 
             });
         });
 
