@@ -57,22 +57,13 @@ var bus = new Vue();
          menuPopperUpper(object) {
              console.log("MenuPopperUpper");
              //this.showBuySeatForm = true;
-             bus.$emit('sigBuySeatFormOn', object, 1000);   //TODO: price and color of original object
+             bus.$emit('sigBuySeatFormOn', object, object.price);   //TODO: price and color of original object
              /*if (object.fill != "gray") { //"Gray", as in the cultural perception of what is colorless enough.
                  object.selectable = false;
              }*/
          }
      },
      created(){
-                //Info on 'selected' from https://github.com/kangax/fabric.js/wiki/Working-with-events
-                    console.log("Seats selected");
-                object.on('selected', function (opt) {
-                    vm.menuPopperUpper(object);
-                });
-             });
-         });
-     }
-    created() {
         // loads a canvas instance from the data store in seat-map.json
         $.getJSON("./seat-map.json", function (data) {
             console.log(data);
@@ -95,6 +86,10 @@ var bus = new Vue();
                     object.dirty = true;
                     if (object.price != undefined) {
                         object.selectable = true;
+                        //Info on 'selected' from https://github.com/kangax/fabric.js/wiki/Working-with-events
+                        object.on('selected', function (opt) {
+                            vm.menuPopperUpper(object);
+                        });
                     }
                     fabCanvas.add(object);
                     fabCanvas.renderAll();
