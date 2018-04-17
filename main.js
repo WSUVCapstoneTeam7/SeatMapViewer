@@ -64,26 +64,42 @@ var bus = new Vue();
          }
      },
      created(){
-         // loads a canvas instance from the data store in seat-map.json
-         $.getJSON( "./seat-map.json", function( data ) {
-             fabCanvas.loadFromJSON(data);
-             console.log("sup");
-             fabCanvas.forEachObject(function(object){ 
-                object.lockMovementX = true;
-                object.lockMovementY = true;
-                object.lockRotation = true;
-                object.selectable = true; 
-
                 //Info on 'selected' from https://github.com/kangax/fabric.js/wiki/Working-with-events
-                object.on('selected', function (opt) {
                     console.log("Seats selected");
+                object.on('selected', function (opt) {
                     vm.menuPopperUpper(object);
-                    console.log("opt and object");
-                    console.log(opt);
-                    console.log(object);
-                    //alert("You are awesome!");
                 });
              });
          });
      }
+    created() {
+        // loads a canvas instance from the data store in seat-map.json
+        $.getJSON("./seat-map.json", function (data) {
+            console.log(data);
+            fabCanvas.loadFromJSON(data);
+            var groups = Array.from(fabCanvas.getObjects());
+            console.log(groups);
+            groups.forEach((section) => {
+                //console.log(section);
+                section._restoreObjectsState();
+                var sectionObjects = Array.from(section.getObjects());
+                fabCanvas.remove(section);
+                sectionObjects.forEach((object) => {
+                    //CNF: Object is selectable but not editable besides purchasing.
+                    console.log("Object")
+                    console.log(object);
+                    object.lockScalingX = object.lockScalingY = true;
+                    object.lockMovementX = object.lockMovementY = true;
+                    object.lockRotation = true;
+                    object.selectable = object.hasControls = false;
+                    object.dirty = true;
+                    if (object.price != undefined) {
+                        object.selectable = true;
+                    }
+                    fabCanvas.add(object);
+                    fabCanvas.renderAll();
+                })
+            })
+        });
+    }
 });
