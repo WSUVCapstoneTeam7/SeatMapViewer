@@ -11,7 +11,7 @@ var vm = new Vue({
     },
     methods: {
         loadDataToFabCanvas(dataArray) {
-            var element =(dataArray[1]);
+            var element = (dataArray[1]);
             var price = element.price;
             if (price == null) {
                 console.log("loadDataToFabCanvas: No price");
@@ -48,11 +48,11 @@ var vm = new Vue({
                 object.lockRotation = true;
                 object.selectable = true;
             });*/
-            var groups = fabCanvas.getObjects();
+            const groups = Array.from(fabCanvas.getObjects());
             console.log(groups);
             groups.forEach((section) => {
                 console.log(section);
-                var sectionObjects = Array.from(section.getObjects());
+                const sectionObjects = Array.from(section.getObjects());
                 sectionObjects.forEach((object) => {
                     //CNF: Object is selectable but not editable besides purchasing.
                     object.lockScalingX = true;
@@ -75,16 +75,17 @@ var vm = new Vue({
                 // console.log("in ungroup()");
                 groupItems = group._objects;
                 group._restoreObjectsState();
-                
 
-                fabCanvas.remove(group);
-                for (var i = 0; i < groupItems.length; i++) {
-                    fabCanvas.add(groupItems[i]);
-                    items[i].dirty = true;
-                    fabCanvas.item(fabCanvas.size()-1).hasControls = false;
+                for (var n = 0; n < 10; n++) {
+                    fabCanvas.remove(group);
+                    for (var i = 0; i < groupItems.length; i++) {
+                        fabCanvas.add(groupItems[i]);
+                        items[i].dirty = true;
+                        fabCanvas.item(fabCanvas.size() - 1).hasControls = false;
+                    }
+                    // if you have disabled render on addition
+                    fabCanvas.renderAll();
                 }
-                // if you have disabled render on addition
-                fabCanvas.renderAll();
             };*/
         });
     }
