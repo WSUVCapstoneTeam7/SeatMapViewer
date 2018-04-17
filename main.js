@@ -54,9 +54,9 @@ var vm = new Vue({
                 console.log(section);
                 var sectionObjects = Array.from(section.getObjects());
                 sectionObjects.forEach((object) => {
-                    //CNF: Disable scaling!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    object.hasControls = false;
-                    object.hasBorders = false;
+                    //CNF: Object is selectable but not editable besides purchasing.
+                    object.lockScalingX = true;
+                    object.lockScalingY = true;
                     object.lockMovementX = true;
                     object.lockMovementY = true;
                     object.lockRotation = true;
