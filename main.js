@@ -27,46 +27,28 @@ var vm = new Vue({
         // loads a canvas instance from the data store in seat-map.json
         $.getJSON("./seat-map.json", function (data) {
             console.log(data);
-            //vm.loadDataToFabCanvas(dataArray);
-            //var element =(data[1]);
-            //var price = element.price;
-            /*if (price == null) {
-                console.log("loadDataToFabCanvas: No price");
-                //fabCanvas.loadFromJSON(element);
-                fabCanvas.add(element);
-                console.log(element);
-            } else {
-                console.log("loadDataToFabCanvas: GOT PRICE! YAY!");
-                console.log(price);
-            }*/
             fabCanvas.loadFromJSON(data);
-            /*fabCanvas.forEachObject(function (object) {
-                console.log("Object");
-                console.log(object);
-                object.lockMovementX = true;
-                object.lockMovementY = true;
-                object.lockRotation = true;
-                object.selectable = true;
-            });*/
-            const groups = Array.from(fabCanvas.getObjects());
+            var groups = Array.from(fabCanvas.getObjects());
             console.log(groups);
             groups.forEach((section) => {
-                console.log(section);
-                const sectionObjects = Array.from(section.getObjects());
+                //console.log(section);
+                section._restoreObjectsState();
+                var sectionObjects = Array.from(section.getObjects());
+                fabCanvas.remove(section);
                 sectionObjects.forEach((object) => {
                     //CNF: Object is selectable but not editable besides purchasing.
-                    object.lockScalingX = true;
-                    object.lockScalingY = true;
-                    object.lockMovementX = true;
-                    object.lockMovementY = true;
+                    console.log("Object")
+                    console.log(object);
+                    object.lockScalingX = object.lockScalingY = true;
+                    object.lockMovementX = object.lockMovementY = true;
                     object.lockRotation = true;
-                    object.selectable = true;
-                    if (section.sectionType == "generalArea") {
-                        console.log("generalArea");
-                        if (object.type == "rect") {
-                            console.log("Object rect");
-                        }
+                    object.selectable = object.hasControls = false;
+                    object.dirty = true;
+                    if (object.price != undefined) {
+                        object.selectable = true;
                     }
+                    fabCanvas.add(object);
+                    fabCanvas.renderAll();
                 })
             })
             /*// ungroup objects in group
