@@ -44,7 +44,7 @@ Vue.component('buy-form',{
         });
     } 
 });
-//End
+//CNF: End of new additions.
 
 var bus = new Vue();
 
