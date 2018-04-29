@@ -84,6 +84,11 @@ var bus = new Vue();
                     object.lockRotation = true;
                     object.selectable = object.hasControls = false;
                     object.dirty = true;
+                    //CNF: Disable any text objects.
+                    if(object.get('type') ==='text' || object.get('type') ==='i-text') {
+                        //object.selectable = false; 
+                        object.editable = false;
+                    }
                     if (object.price != undefined) {
                         object.selectable = true;
                         //Info on 'selected' from https://github.com/kangax/fabric.js/wiki/Working-with-events
