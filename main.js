@@ -3,7 +3,27 @@
  
  fabCanvas.setWidth(window.innerWidth);
  fabCanvas.setHeight(window.innerHeight);
- 
+
+ fabCanvas.on('object:selected', function(e){
+    if(e.target.type=="circle") {
+        bus.$emit('sigAddSeatPopup', [e.target.oCoords.mt.x, e.target.oCoords.mt.y, e.target.width, e.target.price]);
+    }
+});
+
+fabCanvas.on('mouse:down', function(opt) {
+  if(!fabCanvas.getActiveObject()){
+        $(".popup").remove();
+    }
+});
+
+function buySeating() {
+    bus.$emit('sigBuySeating',[]);
+};
+
+function cancelBuying() {
+    $(".popup").remove();
+}
+
 //CNF: All this is new to this branch
 Vue.component('buy-form',{
     template: '#buy-form',
@@ -15,6 +35,19 @@ Vue.component('buy-form',{
         };
     },
     methods:{
+        addSeatPopupMenu(x,y,w, price) {
+            $(".popup").remove();
+            var btnLeft = x;
+            var btnTop = y - 25;
+            var widthadjust=w/2;
+            btnLeft = widthadjust+btnLeft-25;
+            var popup = "<ul id='popup' class='popup' style='position:absolute;top:"+btnTop+"px;left:"+btnLeft+"px;cursor:pointer;'>" +
+                            '<h3 type="price", class="price", id="price"">Price: $'+price+'</h3>' +
+                            '<button class="btn" type="button", onclick="buySeating()">Buy</button>' +
+                            '<button class="btn" type="button", onclick="cancelBuying()">Cancel</button>' +
+                        "</ul>";
+            $(".canvas-container").append(popup);
+        },
         buySeat(){
             console.log("buySeat!");
             alert("Bought seat!");  //TODO: Just for now.
@@ -42,6 +75,12 @@ Vue.component('buy-form',{
         bus.$on('sigBuySeatFormOff',()=>{
             this.showBuySeatForm = false;
         });
+        bus.$on('sigAddSeatPopup', (args)=>{
+            this.addSeatPopupMenu(args[0], args[1], args[2], args[3]);
+        });
+        bus.$on('sigBuySeating', (args)=>{
+            this.buySeat();
+        })
     } 
 });
 //CNF: End of new additions.
