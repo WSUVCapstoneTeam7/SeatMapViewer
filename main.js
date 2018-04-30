@@ -48,10 +48,25 @@ Vue.component('buy-form',{
         },
         buySeat(){
             console.log("buySeat!");
-            alert("Bought seat!");  //TODO: Just for now.
-            // set toggle the seating forms visibility since the seating section has been created.
-            this.showBuySeatForm = false;
-            //TODO: CHANGE COLORS! 
+            var selectedSeat = fabCanvas.getActiveObject();
+            if (selectedSeat.fill != "red"){
+                if (selectedSeat.type == "circle"){
+                    selectedSeat.fill = "red";
+                    selectedSeat.selectable = false;
+                    selectedSeat.dirty = true;
+                    fabCanvas.renderAll();
+                }
+                console.log(selectedSeat);
+                var seatName = " ";
+                if ((selectedSeat.colName != undefined)&&(selectedSeat.rowName != undefined)){
+                    seatName = " "+ selectedSeat.rowName + selectedSeat.colName+ " ";
+                    // seatName = " "+selectedSeat.name+" ";
+                }
+                alert("Seat"+seatName+"purchased.");
+                // // set toggle the seating forms visibility since the seating section has been created.
+                this.showBuySeatForm = false;
+                
+            }
         },
         cancel(){
             console.log("canceled!")
@@ -94,7 +109,7 @@ var bus = new Vue();
          menuPopperUpper(object) {
              console.log("MenuPopperUpper");
              //this.showBuySeatForm = true;
-             bus.$emit('sigBuySeatFormOn', object, object.price);   //TODO: price and color of original object
+            //  bus.$emit('sigBuySeatFormOn', object, object.price);   //TODO: price and color of original object
              /*if (object.fill != "gray") { //"Gray", as in the cultural perception of what is colorless enough.
                  object.selectable = false;
              }*/
@@ -103,10 +118,10 @@ var bus = new Vue();
      created(){
         // loads a canvas instance from the data store in seat-map.json
         $.getJSON("./seat-map.json", function (data) {
-            console.log(data);
+            // console.log(data);
             fabCanvas.loadFromJSON(data);
             var groups = Array.from(fabCanvas.getObjects());
-            console.log(groups);
+            // console.log(groups);
             groups.forEach((section) => {
                 //console.log(section);
                 section._restoreObjectsState();
@@ -114,8 +129,8 @@ var bus = new Vue();
                 fabCanvas.remove(section);
                 sectionObjects.forEach((object) => {
                     //CNF: Object is selectable but not editable besides purchasing.
-                    console.log("Object")
-                    console.log(object);
+                    console.log("Object");
+                    // console.log(object);
                     object.lockScalingX = object.lockScalingY = true;
                     object.lockMovementX = object.lockMovementY = true;
                     object.lockRotation = true;
@@ -126,17 +141,17 @@ var bus = new Vue();
                         //object.selectable = false; 
                         object.editable = false;
                     }
-                    if (object.price != undefined) {
+                    if ( (object.price != undefined)&&(object.deleted != true)) {
                         object.selectable = true;
                         //Info on 'selected' from https://github.com/kangax/fabric.js/wiki/Working-with-events
-                        object.on('selected', function (opt) {
-                            vm.menuPopperUpper(object);
-                        });
+                        // object.on('selected', function (opt) {
+                        //     vm.menuPopperUpper(object);
+                        // });
                     }
                     fabCanvas.add(object);
                     fabCanvas.renderAll();
-                })
-            })
+                });
+            });
         });
     }
 });
