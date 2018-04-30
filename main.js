@@ -5,9 +5,7 @@
  fabCanvas.setHeight(window.innerHeight);
 
  fabCanvas.on('object:selected', function(e){
-    if(e.target.type=="circle") {
-        bus.$emit('sigAddSeatPopup', [e.target.oCoords.mt.x, e.target.oCoords.mt.y, e.target.width, e.target.price]);
-    }
+    bus.$emit('sigAddSeatPopup', [e.target.oCoords.mt.x, e.target.oCoords.mt.y, e.target.width, e.target.price]);
 });
 
 fabCanvas.on('mouse:down', function(opt) {
